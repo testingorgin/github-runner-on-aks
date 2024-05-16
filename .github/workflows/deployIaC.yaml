@@ -3,6 +3,7 @@
 name: IaC Deployment
 env:
   RESOURCE_GROUP: 'aksrunners-rg'
+  
   CLUSTER_NAME: 'aksrunners-aks'
   ADMIN_USERNAME: 'aksadmin'
   REGION: 'centralus'
