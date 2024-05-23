@@ -74,9 +74,9 @@ jobs:
         run: |
           helm repo update
 
-      - name: Install action controller
-        run: |
-          helm install -n actions actions-runner-controller actions-runner-controller/actions-runner-controller --version=0.14.0
+      # - name: Install action controller
+      #   run: |
+      #     helm install -n actions actions-runner-controller actions-runner-controller/actions-runner-controller --version=0.14.0
           
       - name: Deploy GitHub Runner
         run: |
