@@ -84,9 +84,11 @@ jobs:
           apiVersion: actions.summerwind.dev/v1alpha1
           kind: RunnerDeployment
           metadata:
-            name: k8s-single-runner
-            namespace: actions
+           name: k8s-action-runner
+           namespace: actions
           spec:
-              repository: organizationname/repositoryname
-              env: []
+           replicas: 1
+           template:
+             spec:
+               repository: testingorgin/github-runner-on-aks
           EOF
