@@ -4,8 +4,7 @@ on:
 
 permissions:
   id-token: write
-  contents: read
-  
+  contents: read  
 jobs:
   deploy-runner:
     runs-on: ubuntu-latest
