@@ -50,17 +50,21 @@ jobs:
       #      --set prometheus.enabled=false \
       #      --set installCRDs=true
            
-      - name: Create namespace action
-        run: |
-          kubectl create namespace actions   
+      # - name: Create namespace action
+      #   run: |
+      #     kubectl create namespace actions   
           
       - name: Create GitHub Secret
         run: |
-          kubectl create secret generic controller-manager \
-          -n actions \
-          --from-literal=github_app_id=${{ secrets.git_app_id }} \
-          --from-literal=github_app_installation_id=${{ secrets.git_app_installation_id }} \
-          --from-literal=github_app_private_key=${{ secrets.git_app_private_key }}
+          kubectl create secret generic controller-mjanager   -n actions      --from-literal=git_app_id=${{ secrets.git_app_id }}     --from-literal=git_app_installation_id=${{ secrets.git_app_installation_id }}      --from-literal=git_app_private_key=${{ secrets.git_app_private_key }}
+      
+      # - name: Create GitHub Secret
+      #   run: |
+      #     kubectl create secret generic controller-manager \
+      #     -n actions \
+      #     --from-literal=github_app_id=${{ secrets.git_app_id }} \
+      #     --from-literal=github_app_installation_id=${{ secrets.git_app_installation_id }} \
+      #     --from-literal=github_app_private_key=${{ secrets.git_app_private_key }}
 
       - name: action controller using helm chart 
         run: |
