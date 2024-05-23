@@ -20,13 +20,13 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           allow-no-subscriptions: true
           
-      - name: Create Resource Group
-        run: |
-          az group create --name ${{ secrets.AZURE_RESOURCE_GROUP }} --location ${{ secrets.AZURE_LOCATION }}
+      # - name: Create Resource Group
+      #   run: |
+      #     az group create --name ${{ secrets.AZURE_RESOURCE_GROUP }} --location ${{ secrets.AZURE_LOCATION }}
 
-      - name: Create AKS Cluster
-        run: |
-          az aks create --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --name ${{ secrets.AZURE_AKS_CLUSTER }} --node-count 1 --enable-managed-identity --generate-ssh-keys
+      # - name: Create AKS Cluster
+      #   run: |
+      #     az aks create --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --name ${{ secrets.AZURE_AKS_CLUSTER }} --node-count 1 --enable-managed-identity --generate-ssh-keys
 
       - name: Get AKS credentials
         run: |
@@ -40,15 +40,15 @@ jobs:
         run: |
           helm repo update
 
-      - name: Install cert manager
-        run: |
-          helm install \
-          cert-manager jetstack/cert-manager \
-           --namespace cert-manager \
-           --create-namespace \
-           --version v1.14.5 \
-           --set prometheus.enabled=false \
-           --set installCRDs=true
+      # - name: Install cert manager
+      #   run: |
+      #     helm install \
+      #     cert-manager jetstack/cert-manager \
+      #      --namespace cert-manager \
+      #      --create-namespace \
+      #      --version v1.14.5 \
+      #      --set prometheus.enabled=false \
+      #      --set installCRDs=true
            
       - name: Create namespace action
         run: |
