@@ -58,13 +58,13 @@ jobs:
       #   run: |
       #     kubectl create secret generic controller-mjanager   -n actions      --from-literal=git_app_id=${{ secrets.git_app_id }}     --from-literal=git_app_installation_id=${{ secrets.git_app_installation_id }}      --from-literal=git_app_private_key=${{ secrets.git_app_private_key }}
       
-      - name: Create GitHub Secret
-        run: |
-          kubectl create secret generic controllers-manager \
-          -n actions \
-          --from-literal=github_app_id=${{ secrets.git_app_id }} \
-          --from-literal=github_app_installation_id=${{ secrets.git_app_installation_id }} \
-          --from-literal=github_app_private_key=${{ secrets.git_app_private_key }}
+      # - name: Create GitHub Secret
+      #   run: |
+      #     kubectl create secret generic controllers-manager \
+      #     -n actions \
+      #     --from-literal=github_app_id=${{ secrets.git_app_id }} \
+      #     --from-literal=github_app_installation_id=${{ secrets.git_app_installation_id }} \
+      #     --from-literal=github_app_private_key=${{ secrets.git_app_private_key }}
 
       - name: Add action controller using helm chart 
         run: |
