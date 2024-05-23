@@ -50,6 +50,10 @@ jobs:
            --set prometheus.enabled=false \
            --set installCRDs=true
            
+      - name: Create namespace action
+        run: |
+          kubectl create namespace actions   
+          
       - name: Create GitHub Secret
         run: |
           kubectl create secret generic controller-manager \
