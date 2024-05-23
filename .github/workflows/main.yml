@@ -1,0 +1,87 @@
+name: Deploy GitHub Runner to AKS
+
+on:
+  workflow_dispatch: # Allows manual triggering of the workflow
+
+permissions:
+  id-token: write
+  contents: read
+  
+jobs:
+  deploy-runner:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Azure Login via OIDC
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          allow-no-subscriptions: true
+          
+      - name: Create Resource Group
+        run: |
+          az group create --name ${{ secrets.AZURE_RESOURCE_GROUP }} --location ${{ secrets.AZURE_LOCATION }}
+
+      - name: Create AKS Cluster
+        run: |
+          az aks create --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --name ${{ secrets.AZURE_AKS_CLUSTER }} --node-count 1 --enable-addons monitoring --generate-ssh-keys
+
+      - name: Get AKS credentials
+        run: |
+          az aks get-credentials --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --name ${{ secrets.AZURE_AKS_CLUSTER }}
+
+      - name: Create repo jetstack
+        run: |
+          helm repo add jetstack https://charts.jetstack.io
+
+      - name: Update helm repo
+        run: |
+          helm repo update
+
+      - name: Install cert manager
+        run: |
+          helm install \
+          cert-manager jetstack/cert-manager \
+           --namespace cert-manager \
+           --create-namespace \
+           --version v1.14.5 \
+           --set prometheus.enabled=false \
+           --set installCRDs=true
+
+          
+      - name: Create GitHub Secret
+        run: |
+          kubectl create secret generic controller-manager \
+          	-n actions\
+          	--from-literal=github_app_id= ${{ secrets.git_app_id }} \
+          	--from-literal=github_app_installation_id= ${{ secrets.git_app_installation_id }} \
+          	--from-literal=github_app_private_key= ${{ secrets.git_app_private_key }}
+
+      - name: action controller using helm chart 
+        run: |
+          helm repo add actions-runner-controller https://actions-runner-controller.github.io/actions-runner-controller
+          
+      - name: Update helm repo
+        run: |
+          helm repo update
+
+      - name: Install action controller
+        run: |
+          helm install -n actions actions-runner-controller actions-runner-controller/actions-runner-controller --version=0.14.0
+          
+      - name: Deploy GitHub Runner
+        run: |
+          cat <<EOF | kubectl apply -f -
+          apiVersion: actions.summerwind.dev/v1alpha1
+          kind: RunnerDeployment
+          metadata:
+            name: k8s-single-runner
+            namespace: actions
+          spec:
+              repository: organizationname/repositoryname
+              env: []
+          EOF
