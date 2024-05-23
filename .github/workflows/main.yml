@@ -20,13 +20,13 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           allow-no-subscriptions: true
           
-      # - name: Create Resource Group
-      #   run: |
-      #     az group create --name ${{ secrets.AZURE_RESOURCE_GROUP }} --location ${{ secrets.AZURE_LOCATION }}
+      - name: Create Resource Group
+        run: |
+          az group create --name ${{ secrets.AZURE_RESOURCE_GROUP }} --location ${{ secrets.AZURE_LOCATION }}
 
-      # - name: Create AKS Cluster
-      #   run: |
-      #     az aks update --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --name ${{ secrets.AZURE_AKS_CLUSTER }} --node-count 1 --enable-addons monitoring --generate-ssh-keys
+      - name: Create AKS Cluster
+        run: |
+          az aks update --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --name ${{ secrets.AZURE_AKS_CLUSTER }} --node-count 1 --enable-addons monitoring --generate-ssh-keys
 
       - name: Get AKS credentials
         run: |
@@ -44,7 +44,7 @@ jobs:
         run: |
           helm install \
           cert-manager jetstack/cert-manager \
-           --namespace cer-manager \
+           --namespace cert-manager \
            --create-namespace \
            --version v1.14.5 \
            --set prometheus.enabled=false \
@@ -54,9 +54,9 @@ jobs:
         run: |
           kubectl create secret generic controller-manager \
           -n actions \
-          --from-literal=github_app_id= ${{ secrets.git_app_id }} \
-          --from-literal=github_app_installation_id= ${{ secrets.git_app_installation_id }} \
-          --from-literal=github_app_private_key= ${{ secrets.git_app_private_key }}
+          --from-literal=github_app_id=${{ secrets.git_app_id }} \
+          --from-literal=github_app_installation_id=${{ secrets.git_app_installation_id }} \
+          --from-literal=github_app_private_key=${{ secrets.git_app_private_key }}
 
       - name: action controller using helm chart 
         run: |
