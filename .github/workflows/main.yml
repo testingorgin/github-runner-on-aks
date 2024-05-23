@@ -55,7 +55,7 @@ jobs:
       - name: Create GitHub Secret
         run: |
           kubectl create secret generic controller-manager \
-          	-n actions\
+          	-n actions \
           	--from-literal=github_app_id= ${{ secrets.git_app_id }} \
           	--from-literal=github_app_installation_id= ${{ secrets.git_app_installation_id }} \
           	--from-literal=github_app_private_key= ${{ secrets.git_app_private_key }}
