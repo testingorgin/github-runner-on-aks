@@ -44,7 +44,7 @@ jobs:
         run: |
           helm install \
           cert-manager jetstack/cert-manager \
-           --namespace cert-manager \
+           --namespace cer-manager \
            --create-namespace \
            --version v1.14.5 \
            --set prometheus.enabled=false \
